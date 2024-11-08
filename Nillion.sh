@@ -76,6 +76,14 @@ function extract_private_key {
     echo -e "${YELLOW}Сохраните приватный ключ в безопасное место. Для выхода нажмите Ctrl+X.${NC}"
 }
 
+function import_private_key {
+    echo -e "${BLUE}Импортируем приватный ключ...${NC}"
+    echo -e "${YELLOW}Введите приватный ключ:${NC}"
+    read private_key
+    echo "{\"privateKey\": \"$private_key\"}" > nillion/verifier/credentials.json
+    echo -e "${GREEN}Приватный ключ успешно импортирован в credentials.json.${NC}"
+}
+
 function run_node {
     echo -e "${BLUE}Запускаем ноду...${NC}"
     docker run -d -v ./nillion/verifier:/var/tmp nillion/verifier:v1.0.1 verify --rpc-endpoint "https://testnet-nillion-rpc.lavenderfive.com"
@@ -112,10 +120,11 @@ function main_menu {
         echo -e "${YELLOW}Выберите действие:${NC}"
         echo -e "${CYAN}1. Установить ноду${NC}"
         echo -e "${CYAN}2. Извлечь приватный ключ${NC}"
-        echo -e "${CYAN}3. Запустить ноду${NC}"
-        echo -e "${CYAN}4. Удалить ноду${NC}"
-        echo -e "${CYAN}5. Просмотр логов${NC}"
-        echo -e "${CYAN}6. Выход${NC}"
+        echo -e "${CYAN}3. Импортировать приватный ключ${NC}"
+        echo -e "${CYAN}4. Запустить ноду${NC}"
+        echo -e "${CYAN}5. Удалить ноду${NC}"
+        echo -e "${CYAN}6. Просмотр логов${NC}"
+        echo -e "${CYAN}7. Выход${NC}"
 
         echo -e "${PURPLE}Ссылка на текстовый гайд: https://teletype.in/@c6zr7/Nillion${NC} "
 
@@ -124,10 +133,11 @@ function main_menu {
         case $choice in
             1) install_node ;;
             2) extract_private_key ;;
-            3) run_node ;;
-            4) remove_node ;;
-            5) view_logs ;;
-            6) break ;;
+            3) import_private_key ;;
+            4) run_node ;;
+            5) remove_node ;;
+            6) view_logs ;;
+            7) break ;;
             *) echo -e "${RED}Неверный выбор, попробуйте снова.${NC}" ;;
         esac
     done

@@ -76,12 +76,22 @@ function extract_private_key {
     echo -e "${YELLOW}Сохраните приватный ключ в безопасное место. Для выхода нажмите Ctrl+X.${NC}"
 }
 
-function import_private_key {
-    echo -e "${BLUE}Импортируем приватный ключ...${NC}"
+function import_wallet {
+    echo -e "${BLUE}Импортируем кошелек...${NC}"
     echo -e "${YELLOW}Введите приватный ключ:${NC}"
     read private_key
-    echo "{\"privateKey\": \"$private_key\"}" > nillion/verifier/credentials.json
-    echo -e "${GREEN}Приватный ключ успешно импортирован в credentials.json.${NC}"
+    echo -e "${YELLOW}Введите публичный ключ:${NC}"
+    read public_key
+    echo -e "${YELLOW}Введите адрес:${NC}"
+    read address
+    cat <<EOF > nillion/verifier/credentials.json
+{
+  "priv_key": "$private_key",
+  "pub_key": "$public_key",
+  "address": "$address"
+}
+EOF
+    echo -e "${GREEN}Кошелек успешно импортирован в credentials.json.${NC}"
 }
 
 function run_node {
@@ -120,7 +130,7 @@ function main_menu {
         echo -e "${YELLOW}Выберите действие:${NC}"
         echo -e "${CYAN}1. Установить ноду${NC}"
         echo -e "${CYAN}2. Извлечь приватный ключ${NC}"
-        echo -e "${CYAN}3. Импортировать приватный ключ${NC}"
+        echo -e "${CYAN}3. Импортировать кошелек${NC}"
         echo -e "${CYAN}4. Запустить ноду${NC}"
         echo -e "${CYAN}5. Удалить ноду${NC}"
         echo -e "${CYAN}6. Просмотр логов${NC}"
@@ -133,7 +143,7 @@ function main_menu {
         case $choice in
             1) install_node ;;
             2) extract_private_key ;;
-            3) import_private_key ;;
+            3) import_wallet ;;
             4) run_node ;;
             5) remove_node ;;
             6) view_logs ;;
